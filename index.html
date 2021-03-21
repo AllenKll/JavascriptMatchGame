@@ -1,0 +1,79 @@
+<html>
+    <head>
+        <style>
+            .container {
+                height: 240px;
+                width: 240px;
+                margin: auto;
+                border: 1px solid black;
+                display: flex;
+                flex-wrap: wrap;
+            }
+            .box {
+                height: 58px;
+                width: 58px;
+                border: 1px solid blue
+            }
+            .hideColor{
+                background-color: darkgrey !important;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="box"></div><div class="box"></div><div class="box"></div><div class="box"></div>
+            <div class="box"></div><div class="box"></div><div class="box"></div><div class="box"></div>
+            <div class="box"></div><div class="box"></div><div class="box"></div><div class="box"></div>
+            <div class="box"></div><div class="box"></div><div class="box"></div><div class="box"></div>
+        </div>
+        <script>
+            boxes = document.querySelectorAll('.container .box')
+            colors = ['#F00', '#0F0', '#00F', '#FF0', 
+                      '#F0F', '#0FF', '#FFF', '#000']
+            
+            var clickedElements = []
+            var matchesFound = 0
+            
+            function checkWinAndAskAgain(){
+                // if all are uncovered.
+                if ( document.querySelectorAll('.hideColor').length == 0 ){
+                    if ( window.confirm("You win!  Play again?") )
+                        resetGame();
+                }
+            }
+
+            function clicked(){
+                console.log("Click")
+                this.classList.remove("hideColor")
+                if (clickedElements.length > 1){
+                    if (clickedElements[0].style.backgroundColor ==  clickedElements[1].style.backgroundColor ){
+                        clickedElements[0].removeEventListener("click", clicked)
+                        clickedElements[1].removeEventListener("click", clicked)
+                    } 
+                    else{
+                        clickedElements[0].classList.add("hideColor")
+                        clickedElements[1].classList.add("hideColor")
+                    }
+                    clickedElements = []
+                }
+                clickedElements.push(this)
+
+                checkWinAndAskAgain()
+            }
+
+            function resetGame(){
+                for (var i = 0; i < boxes.length; i++){
+                    boxes[i].style.backgroundColor = colors[i % colors.length]
+                    boxes[i].style.order = Math.floor(Math.random()*boxes.length)
+
+                    boxes[i].addEventListener("click", clicked) 
+                    boxes[i].classList.add("hideColor")
+                }
+                clickedElements = []
+                matchesFound = 0
+            }
+
+            resetGame()
+        </script>
+    </body>
+</html>
